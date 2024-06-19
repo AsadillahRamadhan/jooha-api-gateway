@@ -1,16 +1,16 @@
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import 'dotenv/config';
 
-const Auth = ClientsModule.register([
+const User = ClientsModule.register([
   {
-    name: 'AUTH_SERVICE',
+    name: 'USER_SERVICE',
     transport: Transport.GRPC,
     options: {
-      package: 'auth',
-      protoPath: process.env.AUTH_PROTO_PATH,
-      url: process.env.AUTH_SERVICE,
+      package: 'user',
+      protoPath: process.env.USER_PROTO_PATH,
+      url: process.env.USER_SERVICE,
       loader: { keepCase: true },
     },
   },
 ]);
-export default Auth;
+export default User;
