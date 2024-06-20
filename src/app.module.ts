@@ -1,16 +1,23 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './controllers/app.controller';
 import { AppService } from './services/app.service';
-import { AuthService } from './services/auth.service';
-import { AuthController } from './controllers/auth.controller';
 import { UserService } from './services/user.service';
 import { UserController } from './controllers/user.controller';
-import Auth from './protoloaders/auth';
 import User from './protoloaders/user';
+import Handphone from './protoloaders/handphone';
+import { HandphoneController } from './controllers/handphone.controller';
+import { HandphoneService } from './services/handphone.service';
+import { AuthenticateMiddleware } from './middlewares/authenticate.middleware';
 
 @Module({
-  imports: [Auth, User],
-  controllers: [AppController, AuthController, UserController],
-  providers: [AppService, AuthService, UserService],
+  imports: [User, Handphone],
+  controllers: [AppController, UserController, HandphoneController],
+  providers: [AppService, UserService, HandphoneService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AuthenticateMiddleware)
+      .forRoutes(AppController, HandphoneController);
+  }
+}
